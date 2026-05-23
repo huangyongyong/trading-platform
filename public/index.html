@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二手交易信息平台 - 打破交易壁垒</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .search-panel {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            padding: 14px 18px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-panel {
+            padding: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .result-card {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-model {
+            font-size: 1.4rem;
+            color: #212529;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            color: #28a745;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .contact {
+            color: #6c757d;
+            margin: 8px 0;
+        }
+
+        .contact::before {
+            content: "📞 ";
+        }
+
+        .time {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .time::before {
+            content: "🕐 ";
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .error {
+            background: #fee;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+                margin: -20px;
+            }
+            
+            header {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 二手交易信息平台</h1>
+            <p class="subtitle">打破交易壁垒，价格透明共享</p>
+        </header>
+
+        <div class="search-panel">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="productModel" 
+                    class="search-input" 
+                    placeholder="搜索产品型号，如：iPhone 15、MacBook Pro..."
+                >
+                <input 
+                    type="number" 
+                    id="minPrice" 
+                    class="search-input" 
+                    placeholder="最低价格（可选）"
+                    min="0"
+                >
+                <input 
+                    type="number" 
+                    id="maxPrice" 
+                    class="search-input" 
+                    placeholder="最高价格（可选）"
+                    min="0"
+                >
+                <button class="search-btn" onclick="searchListings()">
+                    🔍 搜索报价
+                </button>
+            </div>
+        </div>
+
+        <div class="results-panel">
+            <div class="results-header">
+                <h2>搜索结果</h2>
+                <div class="results-count" id="resultsCount">0 条报价</div>
+            </div>
+
+            <div id="errorContainer" style="display: none;"></div>
+
+            <div id="loading" class="loading" style="display: none;">
+                加载中...
+            </div>
+
+            <div id="resultsContainer" class="results-grid">
+                <!-- 结果会动态插入到这里 -->
+                <div class="loading">
+                    输入关键词搜索报价...
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 交易信息共享平台 | 数据实时更新 | API: <a href="/docs" target="_blank">/docs</a></p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
