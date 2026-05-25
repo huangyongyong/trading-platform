@@ -22,6 +22,14 @@ app.add_middleware(
 
 # 服务静态文件
 #app.mount("/static", StaticFiles(directory="static"), name="static")
+@app.on_event("startup")
+def on_startup():
+    """应用启动时初始化数据库"""
+    try:
+        init_database()
+        print("✅ Database initialized successfully")
+    except Exception as e:
+        print(f"⚠️ Database initialization failed: {e}")
 
 # 将根路径指向 index.html
 @app.get("/")
@@ -35,7 +43,7 @@ def read_static(filename: str):
     return FileResponse(f"public/{filename}")
 
 # ✅ 初始化数据库
-init_database()
+#init_database()
 
 class Listing(BaseModel):
     id: int
