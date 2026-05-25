@@ -1,10 +1,20 @@
+import os
+import tempfile
+
 import sqlite3
 from datetime import datetime
 from contextlib import contextmanager
 from typing import List, Dict, Any, Optional
 
+if os.environ.get("VERCEL"):
+    # Vercel环境：使用 /tmp 目录
+    DB_PATH = os.path.join("/tmp", "listings.db")
+else:
+    # 本地开发环境：使用当前目录
+    DB_PATH = os.path.join(os.path.dirname(__file__), "listings.db")
+
 # 数据库文件路径
-DB_PATH = "listings.db"
+#DB_PATH = "listings.db"
 
 
 def init_database():
