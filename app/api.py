@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query, HTTPException
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from typing import Optional
@@ -7,6 +8,10 @@ from pydantic import BaseModel, Field
 import sqlite3
 import os
 from pathlib import Path
+
+# 获取当前文件所在目录的绝对路径
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = BASE_DIR.parent  # 项目根目录
 
 from app.database import init_database, get_connection, create_listing, get_all_listings
 
@@ -21,6 +26,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ✅ 服务静态文件（app.js等）
+# 将整个public目录挂载到根路径
+app.mount("/", StaticFiles(directory=str(PROJECT_ROOT / "public")), name="public")
+
 # ✅ 添加启动事件
 @app.on_event("startup")
 async def startup_event():
@@ -33,16 +42,28 @@ async def startup_event():
         # 不抛出异常，应用继续运行
 
 # ✅ 根路径返回简单信息
+# ✅ 根路径指向index.html
 @app.get("/")
 def read_root():
-    return {
-        "message": "Trading Platform API is running",
-        "status": "healthy",
-        "endpoints": {
-            "GET /listings": "Get all listings with filters",
-            "POST /listings": "Create a new listing"
-        }
-    }
+    """服务前端主页"""
+    file_path = PROJECT_ROOT / "public" / "index.html"
+    
+    if not file_path.exists():
+        return JSONResponse(
+            status_code=404,
+            content={"message": "Frontend not found", "detail": f"Expected file at {file_path}"}
+        )
+    
+    return FileResponse(file_path)
+
+# ✅ 显式提供app.js路由（可选，但更安全）
+@app.get("/app.js")
+def serve_app_js():
+    """直接提供app.js文件"""
+    file_path = PROJECT_ROOT / "public" / "app.js"
+    if file_path.exists():
+        return FileResponse(file_path, media_type="application/javascript")
+    raise HTTPException(status_code=404, detail="app.js not found")
 
 # ✅ 健康检查端点
 @app.get("/health")
