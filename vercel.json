@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": ["public/**"]
+      }
     }
   ],
   "routes": [
@@ -12,7 +15,7 @@
       "dest": "api/index.py"
     }
   ],
-  "include": [
-    "public/**"
-  ]
+  "env": {
+    "PYTHONPATH": "."
+  }
 }
