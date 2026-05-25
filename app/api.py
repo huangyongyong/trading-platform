@@ -79,4 +79,4 @@ def get_listings_api(
         return listings
 # 在文件最末尾添加以下内容：
 # 这一行是 Vercel 的 Serverless Function 入口
-#app = app
+app = app
